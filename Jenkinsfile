@@ -9,49 +9,46 @@ pipeline {
     environment {
         DOCKER_CREDENTIALS_ID = 'sar123'
         IMAGE_NAME = 'sarracherif/student-management'
-        IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
         stage('GIT') {
             steps {
-                git branch: 'main',
+                git branch: 'main',   
                     url: 'https://github.com/saracher/Cherif_Sarra_4SLEAM3.git'
             }
         }
 
-        stage('Compile Stage') {
+        stage('Compile') {
             steps {
                 sh 'mvn clean compile'
             }
         }
 
-        stage('Package Stage') {
+        stage('Package') {
             steps {
                 sh 'mvn package -DskipTests'
-                sh 'ls -la target'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
             }
         }
 
-    stage('Push to Docker Hub') {
-    steps {
-        withCredentials([usernamePassword(
-    credentialsId: 'sar123',
-    usernameVariable: 'DOCKER_USER',
-    passwordVariable: 'DOCKER_PASS')]) {
-    sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
-    sh "docker push sarracherif/student-management:${BUILD_NUMBER}"
-}
-
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: "${DOCKER_CREDENTIALS_ID}",
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS')]) {
+                    sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                    sh "docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
+                }
+            }
+        }
     }
-}
-
 
     post {
         failure {

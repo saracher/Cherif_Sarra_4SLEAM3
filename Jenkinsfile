@@ -39,18 +39,18 @@ pipeline {
             }
         }
 
-      stage('Push to Docker Hub') {
+    stage('Push to Docker Hub') {
     steps {
-        withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", 
-                                         usernameVariable: 'DOCKER_USER', 
-                                         passwordVariable: 'DOCKER_PASS')]) {
+        withCredentials([usernamePassword(
+            credentialsId: 'sar123', 
+            usernameVariable: 'DOCKER_USER', 
+            passwordVariable: 'DOCKER_PASS')]) {
             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
             sh 'docker push sarracherif/student-management:${BUILD_NUMBER}'
         }
     }
 }
 
-    }
 
     post {
         failure {

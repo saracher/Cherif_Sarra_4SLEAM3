@@ -7,13 +7,12 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_REPO = 'sarracherif/student-management'   
+        DOCKERHUB_REPO = 'sarracherif/student-management'
         DOCKER_CREDENTIALS_ID = 'jenkinsDocker'
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
-
         stage('GIT') {
             steps {
                 git branch: 'main',
@@ -37,21 +36,18 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh """
-                    docker build -t $DOCKERHUB_REPO:$IMAGE_TAG .
-                """
+                sh "docker build -t $DOCKERHUB_REPO:$IMAGE_TAG ."
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-               withCredentials([usernamePassword(credentialsId: 'jenkinsDocker',
-                                  usernameVariable: 'DOCKER_USER',
-                                  passwordVariable: 'DOCKER_PASS')]) {
-    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-    sh 'docker push sarracherif/student-management:${BUILD_NUMBER}'
-}
-
+                withCredentials([usernamePassword(credentialsId: 'jenkinsDocker',
+                                usernameVariable: 'DOCKER_USER',
+                                passwordVariable: 'DOCKER_PASS')]) {
+                    sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                    sh "docker push $DOCKERHUB_REPO:$IMAGE_TAG"
+                }
             }
         }
     }

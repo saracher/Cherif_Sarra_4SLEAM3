@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'sar123'
+        DOCKER_CREDENTIALS_ID = 'jenkinsDocker'
         IMAGE_NAME = 'sarracherif/student-management'
     }
 

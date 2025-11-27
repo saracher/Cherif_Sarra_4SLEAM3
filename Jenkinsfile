@@ -5,6 +5,9 @@ pipeline {
         jdk 'JAVA_HOME'      
         maven 'M2_HOME'     
     }
+environment {
+    DOCKER_CREDENTIALS_ID = 'sar123'
+}
 
     stages {
         stage('GIT') {

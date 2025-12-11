@@ -35,10 +35,10 @@ pipeline {
         }
       stage('MVN SonarQube') {
     environment {
-        SONAR_TOKEN = credentials('sonar-token')
+        SONAR_TOKEN = credentials('sonarqube')
     }
     steps {
-        withSonarQubeEnv('sonarqube') {
+        withSonarQubeEnv('sonar-scanner') {
             sh """
             mvn sonar:sonar \
             -Dsonar.projectKey=SarraProjectsonar \

@@ -33,21 +33,21 @@ pipeline {
                 sh 'ls -la target'
             }
         }
-       stage('MVN SonarQube') {
-            environment {
-                   SONAR_TOKEN = credentials('sonar-token')
-            }
-             steps {
-                 withSonarQubeEnv('sonarqube') {
-                 sh """
-                mvn sonar:sonar \
-                -Dsonar.projectKey=SarraProjectsonar \
-                -Dsonar.host.url=http://172.18.248.231/:9000 \
-                -Dsonar.login=$SONAR_TOKEN
-                """
-             }
-          }
-         }
+      stage('MVN SonarQube') {
+    environment {
+        SONAR_TOKEN = credentials('sonar-token')
+    }
+    steps {
+        withSonarQubeEnv('sonarqube') {
+            sh """
+            mvn sonar:sonar \
+            -Dsonar.projectKey=SarraProjectsonar \
+            -Dsonar.host.url=http://172.18.248.231:9000 \
+            -Dsonar.login=$SONAR_TOKEN
+            """
+        }
+    }
+}
 
         stage('Build Docker Image') {
             steps {

@@ -1,5 +1,5 @@
 FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
-COPY target/*.jar /app
+COPY target/student-management-0.0.1-SNAPSHOT.jar /app/app.jar
 EXPOSE 8089
 ENTRYPOINT ["java","-jar","/app.jar"]

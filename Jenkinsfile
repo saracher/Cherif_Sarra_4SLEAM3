@@ -38,12 +38,12 @@ pipeline {
         SONAR_TOKEN = credentials('sonarqube')
     }
     steps {
-        withSonarQubeEnv('sonar-scanner') {
+        withSonarQubeEnv('sonarqubeServer') {
             sh """
             mvn sonar:sonar \
             -Dsonar.projectKey=SarraProjectsonar \
             -Dsonar.host.url=http://172.18.248.231:9000 \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.login=\$SONAR_TOKEN
             """
         }
     }

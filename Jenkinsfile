@@ -33,11 +33,9 @@ pipeline {
                 sh 'ls -la target'
             }
         }
-  stage('MVN SonarQube') {
-    steps {
-        withSonarQubeEnv('sonarqubeServer') { // nom exact du serveur Jenkins
-            sh 'mvn sonar:sonar -Dsonar.projectKey=student-management'
-        }
+withSonarQubeEnv('sonarqubeServer') {
+    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+        sh "mvn sonar:sonar -Dsonar.projectKey=student-management -Dsonar.login=$SONAR_TOKEN"
     }
 }
 

@@ -36,7 +36,7 @@ pipeline {
   stage('MVN SonarQube') {
     steps {
         withSonarQubeEnv('sonarqubeServer') { // nom exact du serveur Jenkins
-            sh 'mvn sonar:sonar -Dsonar.projectKey=SarraProjectsonar'
+            sh 'mvn sonar:sonar -Dsonar.projectKey=student-management'
         }
     }
 }

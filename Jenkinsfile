@@ -63,16 +63,13 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-               withKubeConfig([credentialsId: 'configMinikube']) {
-    sh "kubectl set image deployment/spring-app spring-app=sarracherif/student-management:$BUILD_NUMBER -n tpkuber"
-    sh "kubectl rollout status deployment/spring-app -n tpkuber"
+stage('Deploy to Kubernetes') {
+    steps {
+        sh "kubectl --kubeconfig=/home/sarra/.kube/config set image deployment/spring-app spring-app=sarracherif/student-management:$BUILD_NUMBER -n tpkuber"
+        sh "kubectl --kubeconfig=/home/sarra/.kube/config rollout status deployment/spring-app -n tpkuber"
+    }
 }
 
-            }
-        }
-    }
 
     post {
         success {

@@ -65,12 +65,11 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                echo "Déploiement sur Kubernetes..."
-                withKubeConfig([credentialsId: 'configMinikube']) {
-                    sh "kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$DOCKERHUB_REPO:$IMAGE_TAG -n $KUBE_NAMESPACE"
-                    sh "kubectl rollout status deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE"
-                }
-                echo "Déploiement terminé."
+               withKubeConfig([credentialsId: 'configMinikube']) {
+    sh "kubectl set image deployment/spring-app spring-app=sarracherif/student-management:$BUILD_NUMBER -n tpkuber"
+    sh "kubectl rollout status deployment/spring-app -n tpkuber"
+}
+
             }
         }
     }

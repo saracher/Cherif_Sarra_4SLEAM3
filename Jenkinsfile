@@ -10,6 +10,8 @@ pipeline {
         DOCKERHUB_REPO = 'sarracherif/student-management'
         DOCKER_CREDENTIALS_ID = 'jenkinsDocker'
         IMAGE_TAG = "${BUILD_NUMBER}"
+        KUBE_NAMESPACE = 'tpkuber'
+        DEPLOYMENT_NAME = 'spring-app'
     }
 
     stages {
@@ -33,18 +35,16 @@ pipeline {
                 sh 'ls -la target'
             }
         }
-stage('MVN SonarQube') {
-    steps {
-       withSonarQubeEnv('sonarqubeServer') {
-    withCredentials([string(credentialsId: 'sonartoken', variable: 'SONAR_TOKEN')]) {
-        sh "mvn sonar:sonar -Dsonar.projectKey=student-management -Dsonar.login=$SONAR_TOKEN"
-    }
-  }
 
-    }
-}
-
-
+        stage('MVN SonarQube') {
+            steps {
+               withSonarQubeEnv('sonarqubeServer') {
+                   withCredentials([string(credentialsId: 'sonartoken', variable: 'SONAR_TOKEN')]) {
+                       sh "mvn sonar:sonar -Dsonar.projectKey=student-management -Dsonar.login=$SONAR_TOKEN"
+                   }
+               }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -62,11 +62,18 @@ stage('MVN SonarQube') {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+               
+                sh "kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$DOCKERHUB_REPO:$IMAGE_TAG -n $KUBE_NAMESPACE"
+            }
+        }
     }
 
     post {
         success {
-            echo "Image Docker poussée avec succès sur $DOCKERHUB_REPO:$IMAGE_TAG"
+            echo "Image Docker poussée et déployée avec succès sur $DOCKERHUB_REPO:$IMAGE_TAG"
         }
         failure {
             echo "Erreur dans le pipeline."

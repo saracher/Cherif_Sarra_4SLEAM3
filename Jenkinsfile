@@ -12,7 +12,7 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         KUBE_NAMESPACE = 'tpkuber'
         DEPLOYMENT_NAME = 'spring-app'
-        KUBECONFIG_PATH = '/home/sarra/.kube/config' // chemin kubeconfig WSL
+        KUBECONFIG_PATH = '/var/lib/jenkins/.kube/config' // chemin kubeconfig accessible par Jenkins
     }
 
     stages {
